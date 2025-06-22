@@ -124,6 +124,10 @@ class TechTrendsMonitor:
                         })
             
             return articles
+        except Exception as e:
+            print(f"Error fetching NewsAPI articles: {e}")
+            return []
+    
     def get_github_trending(self):
         """Get trending AI/ML repositories from GitHub"""
         try:
