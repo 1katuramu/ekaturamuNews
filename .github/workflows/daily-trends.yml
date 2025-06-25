@@ -2,7 +2,7 @@ name: Daily Tech Trends Monitor
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # Runs at 8:00 AM EAT daily
+    - cron: '0 5 * * *'  # 8AM Uganda/Kenya time
   workflow_dispatch:
 
 jobs:
@@ -38,10 +38,18 @@ jobs:
       run: |
         python tech_trends_monitor.py
 
-    - name: Upload updated trends log
+    - name: Upload updated sent log
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: sent-trends-log
         path: sent_trends_log.json
+        retention-days: 7
+
+    - name: Upload log file
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: tech-trends-log
+        path: tech_trends.log
         retention-days: 7
