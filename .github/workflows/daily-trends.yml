@@ -2,9 +2,7 @@ name: Daily Tech Trends Monitor
 
 on:
   schedule:
-    # Run every day at 8:00 AM Uganda/Nairobi time (UTC+3)
-    - cron: '0 5 * * *'
-  # Allow manual triggering
+    - cron: '0 5 * * *'  # Runs at 8:00 AM EAT daily
   workflow_dispatch:
 
 jobs:
@@ -25,6 +23,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests beautifulsoup4 lxml
 
+    - name: Download sent trends log (if exists)
+      uses: actions/download-artifact@v4
+      with:
+        name: sent-trends-log
+        path: .
+
     - name: Run tech trends monitor
       env:
         EMAIL_USER: ${{ secrets.EMAIL_USER }}
@@ -34,11 +38,10 @@ jobs:
       run: |
         python tech_trends_monitor.py
 
-    - name: Upload logs (optional)
+    - name: Upload updated trends log
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: execution-logs
-        path: |
-          *.log
+        name: sent-trends-log
+        path: sent_trends_log.json
         retention-days: 7
